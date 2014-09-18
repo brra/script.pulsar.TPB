@@ -8,7 +8,7 @@ import urllib2
 PAYLOAD = json.loads(base64.b64decode(sys.argv[1]))
 
 def search(query):
-    response = urllib2.urlopen("http://labaia.in/search/%s/0/99/208"  % urllib.quote_plus(query))
+    response = urllib2.urlopen("http://thepiratebay.se/search/%s/0/99/208"  % urllib.quote_plus(query))
     data = response.read()
     if response.headers.get("Content-Encoding", "") == "gzip":
         import zlib
@@ -20,7 +20,7 @@ def search_episode(imdb_id, tvdb_id, name, season, episode):
 
 
 def search_movie(imdb_id, name, year):
-    response = urllib2.urlopen("http://labaia.in/search/" + name + "%20-sub%20-dual" + "/0/99/207")
+    response = urllib2.urlopen("http://thepiratebay.se/search/" + name + "%20-sub%20-dual" + "/0/99/207")
     data = response.read()
     if response.headers.get("Content-Encoding", "") == "gzip":
         import zlib
