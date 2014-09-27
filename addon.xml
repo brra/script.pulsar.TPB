@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.pulsar.TPB.HD" name="Pulsar TPB HD Provider" version="0.0.4" provider-name="brra/uniken">
+<addon id="script.pulsar.TPB" name="Pulsar TPB Provider" version="0.0.4" provider-name="brra/uniken">
 	<requires>
 		<import addon="xbmc.python" version="2.12.0"/>
 	</requires>
@@ -7,7 +7,7 @@
 		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Pulsar TPB HD Provider</summary>
+		<summary lang="en">Pulsar TPB Provider</summary>
 		<language></language>
 		<platform>all</platform>
 	</extension>
