@@ -23,6 +23,7 @@ def search(query):
         __best__ = '/search/%s 720p/0/99/200'
     elif __quality__ == "3":
         __best__ = '/search/%s 480p/0/99/200'
+    
     pre1 = __proxy__
     pre2 = __best__
     pre3 = urllib.quote_plus(query)
@@ -43,6 +44,7 @@ def search_episode(imdb_id, tvdb_id, name, season, episode):
         __best__ = '/search/%s 720p/0/99/200'
     elif __quality__ == "3":
         __best__ = '/search/%s 480p/0/99/200'
+    
     pre1 = __proxy__
     pre2 = __best__
     pre3 = urllib.quote_plus
@@ -65,6 +67,7 @@ def search_movie(imdb_id, name, year):
         __best__ = ' 720p/0/99/200'
     elif __quality__ == "3":
         __best__ = ' 480p/0/99/200'
+    
     pre1 =  __proxy__
     pre2 = '/search/'
     pre3 =  name
@@ -80,4 +83,7 @@ def search_movie(imdb_id, name, year):
     return [{"uri": magnet} for magnet in re.findall(r'magnet:\?[^\'"\s<>\[\]]+', data)]
 
 urllib2.urlopen(
+                PAYLOAD["callback_url"],
+                data=json.dumps(globals()[PAYLOAD["method"]](*PAYLOAD["args"]))
+                )
 
