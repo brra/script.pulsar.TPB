@@ -28,7 +28,6 @@ def search(query):
     pre3 = urllib.quote_plus(query)
     req = pre1 + pre2
     response = urllib2.urlopen((req % pre3). replace(" ", "%20"))
->>>>>>> HD
     data = response.read()
     if response.headers.get("Content-Encoding", "") == "gzip":
         import zlib
