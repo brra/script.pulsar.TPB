@@ -73,7 +73,7 @@ def search_movie(imdb_id, name, year):
     pre3 =  name
     pre4 = __addsearch__
     pre5 = __best__
-    req = pre1 + pre2 + pre3 + pre4 + pre5
+    req = pre1 + pre2 + pre3 + ' ' + pre4 + pre5
     response = urllib2.urlopen((req). replace(" ", "%20"))
     xbmc.log('Movie_Search: %s' % req, xbmc.LOGDEBUG)
     data = response.read()
