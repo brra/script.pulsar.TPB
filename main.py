@@ -50,7 +50,7 @@ def search_episode(imdb_id, tvdb_id, name, season, episode):
     pre3 = urllib.quote_plus
     req = pre1 + pre2
     response = urllib2.urlopen((req % pre3). replace(" ", "%20"))
-    xbmc.log('EP_Search: %s' % url, xbmc.LOGDEBUG)
+    # xbmc.log('EP_Search: %s' % req, xbmc.LOGDEBUG)
     data = response.read()
     if response.headers.get("Content-Encoding", "") == "gzip":
         import zlib
@@ -75,7 +75,7 @@ def search_movie(imdb_id, name, year):
     pre5 = __best__
     req = pre1 + pre2 + pre3 + ' ' + pre4 + pre5
     response = urllib2.urlopen((req). replace(" ", "%20"))
-    xbmc.log('Movie_Search: %s' % req, xbmc.LOGDEBUG)
+    #xbmc.log('Movie_Search: %s' % req, xbmc.LOGDEBUG)
     data = response.read()
     if response.headers.get("Content-Encoding", "") == "gzip":
         import zlib
