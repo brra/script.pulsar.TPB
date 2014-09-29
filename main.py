@@ -9,11 +9,13 @@ import xbmcplugin
 import xbmc
 
 
-__addon__ = xbmcaddon.Addon(str(sys.argv[0]))
+__addon__ = xbmcaddon.Addon(id='script.pulsar.TPB')
 __proxy__ = __addon__.getSetting("url_proxy")
 __quality__ = __addon__.getSetting("quality")
 __addsearch__ = __addon__.getSetting("addsearch")
 
+if __quality__ == "":
+    __addon__.openSettings()
 PAYLOAD = json.loads(base64.b64decode(sys.argv[1]))
 
 def search(query):
