@@ -7,6 +7,11 @@ import urllib2
 import xbmcaddon
 import xbmcplugin
 import xbmc
+
+url_proxy = "http://thepiratebay.se"
+quality = "0"
+addsearch = ""
+
 __addon__ = xbmcaddon.Addon(str(sys.argv[0]))
 __proxy__ = __addon__.getSetting("url_proxy")
 __quality__ = __addon__.getSetting("quality")
