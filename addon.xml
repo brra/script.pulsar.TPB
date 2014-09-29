@@ -10,5 +10,6 @@
 		<summary lang="en">Pulsar TPB Provider</summary>
 		<language></language>
 		<platform>all</platform>
+		<disclaimer lang="en">You need to enter the settings for this addon for it to work!!!/disclaimer>
 	</extension>
 </addon>
