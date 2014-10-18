@@ -11,83 +11,62 @@ import xbmc
 
 __addon__ = xbmcaddon.Addon(id='script.pulsar.TPB')
 __proxy__ = __addon__.getSetting("url_proxy")
-__quality__ = __addon__.getSetting("quality")
-__addsearch__ = __addon__.getSetting("addsearch")
 
-if __quality__ == "":
-    __addon__.openSettings()
-PAYLOAD = json.loads(base64.b64decode(sys.argv[1]))
-
-def search(query):
-    if __quality__ == "0":
-        __best__ = '/search/%s/0/99/200'
-    elif __quality__ == "1":
-        __best__ = '/search/%s 1080p/0/99/200'
-    elif __quality__ == "2":
-        __best__ = '/search/%s 720p/0/99/200'
-    elif __quality__ == "3":
-        __best__ = '/search/%s 480p/0/99/200'
-    
-    pre1 = __proxy__
-    pre2 = __best__
-    pre3 = urllib.quote_plus(query)
-    req = pre1 + pre2
-    response = urllib2.urlopen((req % pre3). replace(" ", "%20"))
-    data = response.read()
-    if response.headers.get("Content-Encoding", "") == "gzip":
-        import zlib
-        data = zlib.decompressobj(16 + zlib.MAX_WBITS).decompress(data)
-    return [{"uri": magnet} for magnet in re.findall(r'magnet:\?[^\'"\s<>\[\]]+', data)]
-
-def search_episode(imdb_id, tvdb_id, name, season, episode):
-    if __quality__ == "0":
-        __best__ = '/search/%s/0/99/200'
-    elif __quality__ == "1":
-        __best__ = '/search/%s 1080p/0/99/200'
-    elif __quality__ == "2":
-        __best__ = '/search/%s 720p/0/99/200'
-    elif __quality__ == "3":
-        __best__ = '/search/%s 480p/0/99/200'
-    
-    pre1 = __proxy__
-    pre2 = __best__
-    pre3 = urllib.quote_plus
-    req = pre1 + pre2
-    response = urllib2.urlopen((req % pre3). replace(" ", "%20"))
-    # xbmc.log('EP_Search: %s' % req, xbmc.LOGDEBUG)
-    data = response.read()
-    if response.headers.get("Content-Encoding", "") == "gzip":
-        import zlib
-        data = zlib.decompressobj(16 + zlib.MAX_WBITS).decompress(data)
-    return search("%s S%02dE%02d" % (name, season, episode))
+# First, you need to import the pulsar module
+# Make sure you declare Pulsar as dependency in the addon.xml or it won't work
+# You can read it at:
+# https://github.com/steeve/plugin.video.pulsar/blob/master/resources/site-packages/pulsar/provider.py
+from pulsar import provider
 
 
-def search_movie(imdb_id, name, year):
-    if __quality__ == "0":
-        __best__ = '/0/99/200'
-    elif __quality__ == "1":
-        __best__ = ' 1080p/0/99/200'
-    elif __quality__ == "2":
-        __best__ = ' 720p/0/99/200'
-    elif __quality__ == "3":
-        __best__ = ' 480p/0/99/200'
-    
+# Raw search
+# query is always a string
     pre1 =  __proxy__
-    pre2 = '/search/'
-    pre3 =  name
-    pre4 = __addsearch__
-    pre5 = __best__
-    req = pre1 + pre2 + pre3 + ' ' + pre4 + pre5
-    response = urllib2.urlopen((req). replace(" ", "%20"))
-    #xbmc.log('Movie_Search: %s' % req, xbmc.LOGDEBUG)
-    data = response.read()
-    if response.headers.get("Content-Encoding", "") == "gzip":
-        import zlib
-        data = zlib.decompressobj(16 + zlib.MAX_WBITS).decompress(data)
-    return [{"uri": magnet} for magnet in re.findall(r'magnet:\?[^\'"\s<>\[\]]+', data)]
+    pre2 =  '/search/%s'
+    url = pre1 + pre2
+def search(query):
+    response = provider.GET(url % provider.quote_plus(query)), params={
+        "q": query,
+    })
+    return provider.extract_magnet(resp.data)
+# To parse JSON you can do:
+#     items = resp.json()
+# To parse XML you can do:
+#     dom = resp.xml()
+# If you have RSS, you can let Pulsar parse it for you with:
+#     return provider.parse_rss(resp.xml())
 
-urllib2.urlopen(
-                PAYLOAD["callback_url"],
-                data=json.dumps(globals()[PAYLOAD["method"]](*PAYLOAD["args"]))
-                )
 
+# Episode Payload Sample
+# {
+#     "imdb_id": "tt0092400",
+#     "tvdb_id": "76385",
+#     "title": "married with children",
+#     "season": 1,
+#     "episode": 1,
+#     "titles": null
+# }
+def search_episode(episode):
+    return search("%(title)s S%(season)02dE%(episode)02d" % episode)
+
+
+# Movie Payload Sample
+# Note that "titles" keys are countries, not languages
+# The titles are also normalized (accents removed, lower case etc...)
+# {
+#     "imdb_id": "tt1254207",
+#     "title": "big buck bunny",
+#     "year": 2008,
+#     "titles": {
+#         "es": "el gran conejo",
+#         "nl": "peach open movie project",
+#         "ru": "большои кролик",
+#         "us": "big buck bunny short 2008"
+#     }
+# }
+def search_movie(movie):
+    return search("%(title)s %(year)d" % movie)
+
+
+# This registers your module for use
+provider.register(search, search_movie, search_episode)
