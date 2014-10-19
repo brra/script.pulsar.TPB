@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
   <setting label="URL/Proxy" type="text" id="url_proxy" default="http://thepiratebay.se/"/>
-  <setting label="Quality for all streams" type="enum" id="quality" values="All|1080p|720p|480p"/>
-  <setting label="Add to movie search" type="text" id="addsearch" default="bluray -dubbed"/>
 </settings>
