@@ -1,16 +1,4 @@
-import sys
-import json
-import base64
-import re
-import urllib
-import urllib2
-import xbmcaddon
-import xbmcplugin
-import xbmc
-
-
-__addon__ = xbmcaddon.Addon(id='script.pulsar.TPB')
-__proxy__ = __addon__.getSetting("url_proxy")
+# coding: utf-8
 
 # First, you need to import the pulsar module
 # Make sure you declare Pulsar as dependency in the addon.xml or it won't work
@@ -21,14 +9,11 @@ from pulsar import provider
 
 # Raw search
 # query is always a string
-    pre1 =  __proxy__
-    pre2 =  '/search/%s'
-    url = pre1 + pre2
 def search(query):
-    response = provider.GET(url % provider.quote_plus(query)), params={
-        "q": query,
-    })
-    return provider.extract_magnet(resp.data)
+    resp = provider.GET("http://thepiratebay.se/search/%s" % provider.quote_plus(query), params={
+                        "q": query,
+                        })
+    return provider.extract_magnets(resp.data)
 # To parse JSON you can do:
 #     items = resp.json()
 # To parse XML you can do:
@@ -65,7 +50,7 @@ def search_episode(episode):
 #     }
 # }
 def search_movie(movie):
-    return search("%(title)s %(year)d" % movie)
+    return search("%(imdb_id)s" % movie)
 
 
 # This registers your module for use
