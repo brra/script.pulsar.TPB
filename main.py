@@ -5,12 +5,18 @@
 # You can read it at:
 # https://github.com/steeve/plugin.video.pulsar/blob/master/resources/site-packages/pulsar/provider.py
 from pulsar import provider
+import xbmcaddon
+__addon__ = xbmcaddon.Addon(id='script.pulsar.TPB')
+__proxy__ = __addon__.getSetting("url_proxy")
 
 
 # Raw search
 # query is always a string
 def search(query):
-    resp = provider.GET("http://thepiratebay.se/search/%s" % provider.quote_plus(query), params={
+    pre1 =  __proxy__
+    pre2 =  '/search/%s'
+    url = pre1 + pre2
+    resp = provider.GET(url % provider.quote_plus(query), params={
                         "q": query,
                         })
     return provider.extract_magnets(resp.data)
